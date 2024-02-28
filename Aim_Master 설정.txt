@@ -1,0 +1,47 @@
+Aim_Master 설정
+
+기본
+-play시 5초마다 벽에서 빨간 과녁이 나오고 기존의 것은 사라진다
+-play시 5초마다 양 옆에서 노란 공이 통통 튀며 중앙을 향해 나아간다
+-빨간 공 1점, 노란 공 5점
+-제한시간 없음
+-좌클릭 : 발사, 우클릭 홀드: zoom카메라로 전환
+
+Player 스크립트
+-LClick 액션을 감지해서 GunMove 트리거를 발동하여 GunFire 코루틴으로 Update에서 애니메이션 재생
+-ShootRay 함수에서 현재 활성화된 카메라를 찾고 Ray를 생헝하여 화면에서 마우스 위치를 향해 쏜다
+-Ray가 어떤 콜라이더에 부딪히는지 확인하고
+-부딪힌 콜라이더가 Target인지 Gold인지 확인하여 각각 다른 델리게이트 호출
+
+Rotation 스크립트
+-Start에서 시작할 때 모든 회전 값을 0으로 초기화하고
+-Update에서 마우스의 움직임을 가져오고 수평회전
+
+Target 스크립트
+-Player에서 Ray가 부딪힌 콜라이더가 Target일 경우 OnHitByPlayerAction 델리게이트
+-OnHitByPlayer로 델리게이트 연결
+
+Gold 스크립트
+-왼쪽에서 생성될 경우 왼쪽으로 힘 가하고, 그 외는 오른쪽으로 함 가하기
+
+TargetSpawner 스크립트
+-Start에서 코루틴으로 Spawn 실행
+-Spawn: Instantiate로 직접 생성
+-타겟이 생성될 때마다 InitializeTarget 함수에서 초기화
+-생성 위치는 가로 세로 지정된 범위에서 랜덤하게 5개를 뽑아서 생성
+-Player가 타겟을 맞추면 DestroyTargets 실행하여 삭제
+-Player가 타겟을 맞추면 Score함수에서 score++하고 델리게이트로 신호보냄
+
+GoldSpawner 스크립트
+-대부분 TargetSpawner 스크립트와 비슷하고, 스폰만 다름
+
+CameraSwitcher 스크립트
+-Start에서 mainCamera = true, zoomCamera = false
+-마우스 오른쪽 버튼을 누르면 Main Camera를 false 하고 Zoom Camera를 true
+-마우스 오른쪽 버튼 비활성화 되면 Main Camera를 true 하고 Zoom Camera를 false
+
+ScoreUI 스크립트
+-targetSpawner와 goldSpawner의 델리게이트 연결
+-targetSpawner의 score와 goldSpawner의 score를 더해서 출력
+
+
